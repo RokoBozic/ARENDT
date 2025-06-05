@@ -85,7 +85,7 @@
     <script>
         const apiUrl = '@apiUrl';
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${apiUrl}gamehub`)
+            .withUrl(`${apiUrl}/gamehub`)
             .withAutomaticReconnect()
             .build();
 
@@ -99,7 +99,7 @@
                 console.log("Connected to game hub");
                 await joinGame();
             } catch (err) {
-                console.error("SignalR Connection Error:", err);
+                console.error(err);
                 setTimeout(startConnection, 5000);
             }
         }
@@ -107,14 +107,7 @@
         async function joinGame() {
             const gameCode = "@Model.Code";
             const playerId = "@ViewBag.PlayerId";
-            console.log("Joining game with code:", gameCode, "and playerId:", playerId);
-            try {
-                await connection.invoke("JoinGame", gameCode, playerId);
-                console.log("Successfully joined game");
-            } catch (err) {
-                console.error("Error joining game:", err);
-                setTimeout(joinGame, 5000);
-            }
+            await connection.invoke("JoinGame", gameCode, playerId);
         }
 
         function showScreen(screenId) {
